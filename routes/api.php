@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Student\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,3 +32,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 //Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware(['student.auth'])->group(function () {
+    // Routes accessible to students only
+    Route::get('/student/user', [StudentController::class, 'user']);
+});
+
+Route::middleware(['client.auth'])->group(function () {
+    // Routes accessible to clients only
+    Route::get('/client/user', [ClientController::class, 'user']);
+});

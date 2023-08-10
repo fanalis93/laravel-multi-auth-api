@@ -30,7 +30,7 @@ class AuthController extends Controller
                     'message' => ['These credentials do not match our records.']
                 ], 404);
             }
-            $request->session()->regenerate();
+
 
             $role = $user->role; // Assuming the role field is named 'role'
 
@@ -39,21 +39,22 @@ class AuthController extends Controller
             // Customize the token name and redirect routes based on the user's role
             switch ($role) {
                 case 1: // User
-                    $tokenName = 'admin-token';
-                    $redirectRoute = 'admin/dashboard'; // Replace with your admin dashboard route
+                    $tokenName = 'student-token';
+                    $redirectRoute = 'studet/dashboard';
                     break;
                 case 2: // Client
                     $tokenName = 'client-token';
-                    $redirectRoute = 'client/dashboard'; // Replace with your client dashboard route
+                    $redirectRoute = 'client/dashboard';
                     break;
                 case 3: // Admin
-                    $tokenName = 'user-token';
-                    $redirectRoute = 'user/dashboard'; // Replace with your user dashboard route
+                    $tokenName = 'admin-token';
+                    $redirectRoute = 'admin/dashboard';
                     break;
                 default:
                     $redirectRoute = 'login'; // Default redirect route for unknown roles
             }
 
+            $request->session()->regenerate();
             $token = $user->createToken($tokenName)->plainTextToken;
             $response = [
                 'user' => $user,
@@ -105,7 +106,7 @@ class AuthController extends Controller
                 'name' => 'required|unique:users',
                 'password' => 'required',
                 'email' => 'required|unique:users,email',
-                'role' => 'nullable',
+                'role' => 'nullable|in:1,2', // Make sure role is 1 or 2
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -124,11 +125,11 @@ class AuthController extends Controller
             // $token = $user->createToken('auth-token')->plainTextToken;
 
             if ($user->save()) {
-
+                Auth::login($user);
                 if ($user->role == 1) {
                     $user->student()->create([
                         'user_id' => $user->id,
-                        'name' => $user->name,
+                        'username' => $user->name,
                         'email' => $user->email,
                         'password' => $user->password,
                     ]);
@@ -141,9 +142,14 @@ class AuthController extends Controller
                     ]);
                 }
 
-
+                // check if user is logged in
+                if (Auth::check()) {
+                    // redirect to home page
+                    $log = 'user logged in';
+                }
                 $response = [
                     'user' => $user,
+                    'log' => $log ?? 'user not logged in',
                     // 'token' => $token,
                 ];
 
