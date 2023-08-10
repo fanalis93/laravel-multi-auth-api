@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Student\StudentController;
@@ -32,12 +33,17 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 //Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-Route::middleware(['student.auth'])->group(function () {
+Route::middleware(['auth:sanctum', 'student.auth'])->group(function () {
     // Routes accessible to students only
     Route::get('/student/user', [StudentController::class, 'user']);
 });
 
-Route::middleware(['client.auth'])->group(function () {
+Route::middleware(['auth:sanctum', 'client.auth'])->group(function () {
     // Routes accessible to clients only
     Route::get('/client/user', [ClientController::class, 'user']);
+});
+
+Route::middleware(['auth:sanctum', 'admin.auth'])->group(function () {
+    // Routes accessible to admins only
+    Route::get('/admin/user', [AdminController::class, 'user']);
 });

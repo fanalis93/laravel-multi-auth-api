@@ -40,7 +40,7 @@ class AuthController extends Controller
             switch ($role) {
                 case 1: // User
                     $tokenName = 'student-token';
-                    $redirectRoute = 'studet/dashboard';
+                    $redirectRoute = 'student/dashboard';
                     break;
                 case 2: // Client
                     $tokenName = 'client-token';
@@ -125,7 +125,7 @@ class AuthController extends Controller
             // $token = $user->createToken('auth-token')->plainTextToken;
 
             if ($user->save()) {
-                Auth::login($user);
+                // Auth::login($user);
                 if ($user->role == 1) {
                     $user->student()->create([
                         'user_id' => $user->id,
