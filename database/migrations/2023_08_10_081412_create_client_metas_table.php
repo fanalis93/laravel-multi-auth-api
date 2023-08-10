@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('client_metas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('name')->nullable()->unique();
             $table->string('email')->nullable()->unique();
             $table->string('password')->nullable();

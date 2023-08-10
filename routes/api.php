@@ -33,9 +33,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 //Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-Route::middleware(['auth:sanctum', 'student.auth'])->group(function () {
+Route::middleware(['auth:sanctum', 'student.auth'])->prefix('student')->group(function () {
     // Routes accessible to students only
-    Route::get('/student/user', [StudentController::class, 'user']);
+    Route::get('/user', [StudentController::class, 'user']);
 });
 
 Route::middleware(['auth:sanctum', 'client.auth'])->group(function () {

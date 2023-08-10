@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('student_metas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->string('username')->nullable();
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->longText('course_id')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
-            $table->foreign('client_id')->references('id')->on('client_metas')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('client_metas')->onDelete('cascade')->onUpdate('cascade');
             $table->rememberToken();
             $table->string('profile_photo', 2048)->nullable();
             $table->boolean('verified')->default(0);
